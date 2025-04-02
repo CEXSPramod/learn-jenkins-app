@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            agent{
+                Docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    echo 'Building First Project in Jenkins'
+                    npm --version
+                    node --version
+                    ls -la
+                    npm ci
+                    npm run build
+                    ls -la
+                '''
+            }
+        }
+    }
+}
