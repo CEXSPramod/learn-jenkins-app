@@ -1,4 +1,8 @@
 pipeline {
+    enviorment {
+        NETLIFY_SITE_ID='6e0aaf86-a96e-4b21-b960-e9a2250b2806'
+        NETLIFY_AUTH_TOKEN = credentials('netlfy-token')
+    }
     agent any
 
     stages {
@@ -32,6 +36,20 @@ pipeline {
                 sh '''
                   echo 'Testing....'
                   npm test a
+                '''
+            }
+        }
+        stage('Deploy') {
+            agent{
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                   npm install netlify-cli
+                   netlify --version
                 '''
             }
         }
